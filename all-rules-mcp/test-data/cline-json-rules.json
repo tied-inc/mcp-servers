@@ -1,0 +1,19 @@
+[
+  {
+    "name": "React component rules",
+    "description": "Use functional components with Hooks",
+    "appliesTo": ["**/*.tsx", "**/*.jsx"],
+    "enabled": true
+  },
+  {
+    "name": "API error handling",
+    "description": "Always implement proper error handling for API calls",
+    "content": "Use try-catch blocks and return meaningful error messages",
+    "enabled": true
+  },
+  {
+    "name": "Code documentation",
+    "description": "All public functions must have JSDoc comments",
+    "enabled": true
+  }
+]

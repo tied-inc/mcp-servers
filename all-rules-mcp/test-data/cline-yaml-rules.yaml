@@ -1,0 +1,17 @@
+- name: Python naming convention
+  description: Use snake_case for all variables in Python
+  appliesTo:
+    - "**/*.py"
+  enabled: true
+
+- name: TypeScript strict mode
+  description: Enforce strict type checking in TypeScript
+  appliesTo:
+    - "**/*.ts"
+    - "**/*.tsx"
+  enabled: true
+
+- name: TDD workflow
+  description: Use Test-Driven Development for all new features
+  content: "Write tests first, then implement the functionality"
+  enabled: true

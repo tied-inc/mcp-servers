@@ -1,0 +1,33 @@
+---
+description: "Python変数名はsnake_caseを使用"
+globs: ["**/*.py"]
+author: "Hayata Yamamoto"
+date: "2025-06-10"
+tags: ["python", "style", "naming"]
+---
+
+# Python変数名規約
+
+- 全てのPython変数名はsnake_caseを使用してください
+- クラス名はPascalCaseを使用してください
+- 定数は大文字のSNAKE_CASEを使用してください
+
+## 例
+
+```python
+# 良い例
+user_name = "John"
+total_count = 100
+MAX_RETRY_COUNT = 3
+
+class UserManager:
+    pass
+
+# 悪い例
+userName = "John"  # camelCase は使わない
+totalCount = 100   # camelCase は使わない
+```
+
+## 参考
+
+- PEP 8: Style Guide for Python Code
