@@ -23,7 +23,7 @@
     "tsx": "^4.20.3",
     "typescript": "^5"
   },
-  "description": "This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).",
+  "description": "An MCP server that unifies and manages AI editor rules across different platforms with semantic search capabilities.",
   "author": "",
   "license": "ISC"
 }

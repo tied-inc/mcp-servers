@@ -2,6 +2,8 @@
 
 An MCP (Model Context Protocol) server that unifies and manages AI editor rules across different platforms and formats. This server provides semantic search and management capabilities for coding rules from various AI-powered editors including Cursor, Cline, GitHub Copilot, Continue, and Windsurf.
 
+Built with FastMCP framework and LibSQL vector database for efficient rule indexing and semantic search.
+
 ## Quick Start
 
 ### Prerequisites
@@ -39,7 +41,7 @@ GOOGLE_EMBEDDING_MODEL=text-embedding-004
 
 4. **Start the server:**
 ```bash
-# Development
+# Development (with hot reload using tsx)
 npm run dev
 
 # Production
@@ -374,7 +376,11 @@ all-rules-mcp/
 ├── rules-example/         # Sample rule files
 │   ├── sample-cursor-rule.mdc
 │   ├── cline-yaml-rules.yaml
-│   └── cline-json-rules.json
+│   ├── cline-json-rules.json
+│   ├── clinerules-single.md
+│   └── sample-rule1.md
+├── test-data/            # Additional test rule files
+│   └── (similar structure)
 ├── test-client.js         # Test client for MCP tools
 ├── .env.example           # Environment configuration template
 ├── rules.db              # LibSQL vector database (created automatically)
