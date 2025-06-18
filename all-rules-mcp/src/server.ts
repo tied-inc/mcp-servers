@@ -12,6 +12,36 @@ import { embed } from "ai";
 const PORT = process.env.PORT ? Number.parseInt(process.env.PORT) : 3001;
 const RULES_DIR = process.env.RULES_DIR || path.join(process.cwd(), "rules-example");
 
+// Common rule directories for different AI editors
+const COMMON_RULE_DIRS = [
+  ".cursor/rules",           // Cursor rules
+  ".cline/rules",           // Cline rules  
+  ".continue/rules",        // Continue rules
+  ".github/copilot",        // GitHub Copilot rules
+  ".vscode/rules",          // VS Code rules
+  "rules",                  // Generic rules directory
+  ".ai-rules",              // Generic AI rules directory
+];
+
+async function findExistingRuleDirectories(): Promise<string[]> {
+  const existingDirs: string[] = [];
+  
+  for (const dirPath of COMMON_RULE_DIRS) {
+    const fullPath = path.join(process.cwd(), dirPath);
+    try {
+      const stats = await fs.stat(fullPath);
+      if (stats.isDirectory()) {
+        existingDirs.push(fullPath);
+        console.log(`Found rule directory: ${fullPath}`);
+      }
+    } catch (error) {
+      // Directory doesn't exist, continue
+    }
+  }
+  
+  return existingDirs;
+}
+
 
 let database: RulesDatabase | null = null;
 const embeddingModel = getEmbeddingFunction();
@@ -25,8 +55,33 @@ async function initializeDatabaseAndLoadRules() {
     database = new RulesDatabase();
     await database.initialize();
 
-    console.log(`Scanning rules directory: ${RULES_DIR}`);
-    await scanAndIndexRules(RULES_DIR);
+    // Determine which directories to scan
+    const directoriesToScan: string[] = [];
+    
+    if (process.env.RULES_DIR) {
+      // If RULES_DIR is explicitly set, use only that
+      directoriesToScan.push(RULES_DIR);
+      console.log(`Using explicitly set rules directory: ${RULES_DIR}`);
+    } else {
+      // Auto-detect existing rule directories
+      const existingDirs = await findExistingRuleDirectories();
+      
+      if (existingDirs.length > 0) {
+        directoriesToScan.push(...existingDirs);
+        console.log(`Auto-detected ${existingDirs.length} rule directories`);
+      } else {
+        // Fallback to default directory
+        directoriesToScan.push(RULES_DIR);
+        console.log(`No rule directories found, using fallback: ${RULES_DIR}`);
+      }
+    }
+
+    // Scan all directories
+    for (const dir of directoriesToScan) {
+      console.log(`Scanning rules directory: ${dir}`);
+      await scanAndIndexRules(dir);
+    }
+    
     const ruleCount = await database.getRuleCount();
     console.log(`${ruleCount} rules loaded and indexed in LibSQL database.`);
   } catch (error) {
@@ -221,7 +276,6 @@ async function startServer() {
 
     console.log(`FastMCP Server listening on port ${PORT}`);
     console.log("MCP endpoint: /mcp");
-    console.log(`Serving rules from: ${path.resolve(RULES_DIR)}`);
   } catch (error) {
     console.error("Failed to start FastMCP server:", error);
     process.exit(1);

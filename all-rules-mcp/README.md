@@ -2,37 +2,14 @@
 
 An MCP (Model Context Protocol) server that unifies and manages AI editor rules across different platforms and formats. This server provides semantic search and management capabilities for coding rules from various AI-powered editors including Cursor, Cline, GitHub Copilot, Continue, and Windsurf.
 
-## Features
-
-### 🔍 **Unified Rule Management**
-- **Multi-format Support**: Parse and unify rules from different AI editors:
-  - Cursor (.mdc files with frontmatter)
-  - Cline (YAML, JSON, and Markdown formats)
-  - GitHub Copilot instruction files
-  - Generic Markdown and text files
-- **Semantic Search**: Vector-based search using LibSQL and AI SDK embeddings
-- **Structured Data**: Consistent rule schema with metadata, scope, and context
-
-### 🎯 **Smart Rule Organization**
-- **Scoped Rules**: Target specific languages, frameworks, technologies, and tasks
-- **Priority System**: Categorize rules by importance (low, medium, high, critical)
-- **Context-Aware**: Rules organized by category (style, syntax, architecture, security, performance, testing, documentation)
-- **Metadata Filtering**: Filter results by language, category, priority, technology, and framework
-
-### 🚀 **MCP Integration**
-- **FastMCP Framework**: Built on the FastMCP library for efficient MCP server implementation
-- **Tool-based Interface**: Expose functionality through MCP tools
-- **Real-time Search**: Query rules using natural language with filters and limits
-- **Similarity Scoring**: Search results include relevance scores
-
-## Installation
+## Quick Start
 
 ### Prerequisites
 - Node.js 18+
 - npm or yarn
 - API key for OpenAI or Google (for embeddings)
 
-### Setup
+### Installation
 
 1. **Clone and install dependencies:**
 ```bash
@@ -70,7 +47,41 @@ npm run build
 npm start
 ```
 
-## Usage
+## Configuration
+
+### Environment Variables
+
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `PORT` | Server port | `3001` |
+| `RULES_DIR` | Rules directory | `rules-example` |
+| `EMBEDDING_PROVIDER` | Provider (`openai`, `google`) | `openai` |
+| `OPENAI_API_KEY` | OpenAI API key | - |
+| `OPENAI_EMBEDDING_MODEL` | OpenAI model | `text-embedding-3-small` |
+| `GOOGLE_API_KEY` | Google API key | - |
+| `GOOGLE_EMBEDDING_MODEL` | Google model | `text-embedding-004` |
+
+### MCP Client Configuration
+
+Add to your MCP client configuration:
+
+```json
+{
+  "mcpServers": {
+    "all-rules-mcp": {
+      "command": "node",
+      "args": ["dist/server.js"],
+      "env": {
+        "EMBEDDING_PROVIDER": "openai",
+        "OPENAI_API_KEY": "your-key-here",
+        "RULES_DIR": "/path/to/your/rules"
+      }
+    }
+  }
+}
+```
+
+## MCP Usage
 
 ### Quick Test
 
@@ -208,6 +219,29 @@ Use snake_case for all Python variables:
 }
 ```
 
+## Features
+
+### 🔍 **Unified Rule Management**
+- **Multi-format Support**: Parse and unify rules from different AI editors:
+  - Cursor (.mdc files with frontmatter)
+  - Cline (YAML, JSON, and Markdown formats)
+  - GitHub Copilot instruction files
+  - Generic Markdown and text files
+- **Semantic Search**: Vector-based search using LibSQL and AI SDK embeddings
+- **Structured Data**: Consistent rule schema with metadata, scope, and context
+
+### 🎯 **Smart Rule Organization**
+- **Scoped Rules**: Target specific languages, frameworks, technologies, and tasks
+- **Priority System**: Categorize rules by importance (low, medium, high, critical)
+- **Context-Aware**: Rules organized by category (style, syntax, architecture, security, performance, testing, documentation)
+- **Metadata Filtering**: Filter results by language, category, priority, technology, and framework
+
+### 🚀 **MCP Integration**
+- **FastMCP Framework**: Built on the FastMCP library for efficient MCP server implementation
+- **Tool-based Interface**: Expose functionality through MCP tools
+- **Real-time Search**: Query rules using natural language with filters and limits
+- **Similarity Scoring**: Search results include relevance scores
+
 ## Architecture
 
 ### Vector Storage
@@ -292,9 +326,13 @@ all-rules-mcp/
 └── package.json
 ```
 
-## Configuration
+---
 
-### Environment Variables
+## Development Documentation
+
+### Configuration
+
+#### Environment Variables
 
 | Variable | Description | Default |
 |----------|-------------|---------|
@@ -306,23 +344,21 @@ all-rules-mcp/
 | `GOOGLE_API_KEY` | Google API key | - |
 | `GOOGLE_EMBEDDING_MODEL` | Google model | `text-embedding-004` |
 
-### Supported File Extensions
+#### Supported File Extensions
 The server automatically scans for files with these patterns:
 - `.md`, `.mdc`, `.yaml`, `.json`, `.txt`
 - Files containing "rules" in the name
 - GitHub Copilot instruction files
 - Cline configuration files
 
-## Development
-
-### Scripts
+#### Scripts
 ```bash
 npm run dev      # Start development server with hot reload (tsx)
 npm run build    # Build TypeScript to JavaScript
 npm start        # Start production server
 ```
 
-### Dependencies
+#### Dependencies
 - **fastmcp**: MCP server framework
 - **@mastra/libsql**: Vector database for semantic search
 - **@ai-sdk/openai**: OpenAI integration via AI SDK
@@ -330,14 +366,14 @@ npm start        # Start production server
 - **ai**: Core AI SDK for embeddings
 - **zod**: Runtime type validation
 
-### Adding New Rule Formats
+#### Adding New Rule Formats
 
 1. Create a new parser in `src/lib/`
 2. Add format detection logic
 3. Implement UnifiedRule conversion
 4. Update `scanAndIndexRules` in `server.ts`
 
-### Testing
+#### Testing
 
 ```bash
 # Start server
@@ -352,37 +388,13 @@ curl -X POST http://localhost:3001/mcp \
 node test-client.js
 ```
 
-## Performance
+#### Performance
 
 - **Fast Startup**: LibSQL vector database initializes quickly
 - **Efficient Search**: Optimized cosine similarity with metadata filtering
 - **Local Storage**: No external dependencies for vector search
 - **Persistent Cache**: Embeddings cached between server restarts
 - **Streaming Support**: FastMCP HTTP streaming for real-time responses
-
-## MCP Client Integration
-
-This server implements the Model Context Protocol (MCP) and can be used with MCP-compatible AI editors and tools.
-
-### MCP Client Configuration
-
-Add to your MCP client configuration:
-
-```json
-{
-  "mcpServers": {
-    "all-rules-mcp": {
-      "command": "node",
-      "args": ["dist/server.js"],
-      "env": {
-        "EMBEDDING_PROVIDER": "openai",
-        "OPENAI_API_KEY": "your-key-here",
-        "RULES_DIR": "/path/to/your/rules"
-      }
-    }
-  }
-}
-```
 
 ## Contributing
 
