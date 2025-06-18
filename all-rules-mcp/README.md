@@ -47,6 +47,40 @@ npm run build
 npm start
 ```
 
+### Docker Usage
+
+#### Pull from GitHub Container Registry
+
+```bash
+# Pull the latest image
+docker pull ghcr.io/tied-inc/mcp-servers/all-rules-mcp:latest
+
+# Run with default example rules
+docker run -p 3001:3001 \
+  -e OPENAI_API_KEY=your_openai_api_key \
+  ghcr.io/tied-inc/mcp-servers/all-rules-mcp:latest
+
+# Run with custom rules directory
+docker run -p 3001:3001 \
+  -v /path/to/your/rules:/app/rules \
+  -e OPENAI_API_KEY=your_openai_api_key \
+  -e RULES_DIR=/app/rules \
+  ghcr.io/tied-inc/mcp-servers/all-rules-mcp:latest
+```
+
+#### Build locally
+
+```bash
+# Build the Docker image
+docker build -t all-rules-mcp .
+
+# Run with environment variables
+docker run -p 3001:3001 \
+  -e EMBEDDING_PROVIDER=openai \
+  -e OPENAI_API_KEY=your_openai_api_key \
+  all-rules-mcp
+```
+
 ## Configuration
 
 ### Environment Variables
@@ -63,7 +97,7 @@ npm start
 
 ### MCP Client Configuration
 
-Add to your MCP client configuration:
+#### Using Node.js (Local Development)
 
 ```json
 {
@@ -76,6 +110,27 @@ Add to your MCP client configuration:
         "OPENAI_API_KEY": "your-key-here",
         "RULES_DIR": "/path/to/your/rules"
       }
+    }
+  }
+}
+```
+
+#### Using Docker
+
+```json
+{
+  "mcpServers": {
+    "all-rules-mcp": {
+      "command": "docker",
+      "args": [
+        "run",
+        "--rm",
+        "-p", "3001:3001",
+        "-v", "/path/to/your/rules:/app/rules",
+        "-e", "OPENAI_API_KEY=your-key-here",
+        "-e", "RULES_DIR=/app/rules",
+        "ghcr.io/tied-inc/mcp-servers/all-rules-mcp:latest"
+      ]
     }
   }
 }
